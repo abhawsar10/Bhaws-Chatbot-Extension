@@ -7,18 +7,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const userMessage = userInput.value.trim();
 
         if (userMessage !== '') {
-            // Create and display the user message
             displayUserMessage(userMessage);
 
-            // Simulate a bot response (you can replace this with real chatbot logic)
             const botResponse = getchatbotresponse(userMessage);
             console.log(botResponse)
             displayBotMessage(botResponse);
 
-            // Clear the user's input field
             userInput.value = '';
-
-            // Scroll to the bottom of the chat container
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     });
@@ -40,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return messageElement;
     }
 
-    async function getchatbotresponse(userMessage) {
+    function getchatbotresponse(userMessage) {
         
         return "hi"
     }
