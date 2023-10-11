@@ -9,6 +9,7 @@ chrome.sidePanel
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
 
   if (!tab.url) return;
+  console.log("loda",tab.url)
 
   const url = new URL(tab.url);
 
