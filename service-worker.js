@@ -1,6 +1,5 @@
 
-const SAATVA_ORIGIN = 'https://www.saatva.com/';
-
+const SAATVA_ORIGIN = 'https://www.saatva.com';
 // Allows users to open the side panel by clicking on the action toolbar icon
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
@@ -9,7 +8,6 @@ chrome.sidePanel
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
 
   if (!tab.url) return;
-  console.log("loda",tab.url)
 
   const url = new URL(tab.url);
 
