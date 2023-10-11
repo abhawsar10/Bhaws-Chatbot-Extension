@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const sendButton = document.getElementById('sendButton');
     const userInput = document.getElementById('user-input');
@@ -12,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
             displayUserMessage(userMessage);
 
             // Simulate a bot response (you can replace this with real chatbot logic)
-            const botResponse = getBotResponse(userMessage);
+            const botResponse = getchatbotresponse(userMessage);
+            console.log(botResponse)
             displayBotMessage(botResponse);
 
             // Clear the user's input field
@@ -40,15 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return messageElement;
     }
 
-    function getBotResponse(userMessage) {
-        // Simulate bot responses (you can replace this with real chatbot logic)
-        switch (userMessage.toLowerCase()) {
-            case 'hello':
-                return 'Hello! How can I assist you?';
-            case 'how are you?':
-                return 'I am just a chatbot, but I am here to help!';
-            default:
-                return 'I do not understand. Please ask another question.';
-        }
+    async function getchatbotresponse(userMessage) {
+        
+        return "hi"
     }
+    
 });
+
+
