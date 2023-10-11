@@ -2,9 +2,25 @@
   "manifest_version": 3,
   "name": "Bhaws Chat Extension",
   "version": "1.0",
-  "description": "Base Level Extension",
+  "description": "Chat Bot Extension for PDPs on saatva.com",
+  "background": {
+    "service_worker": "service-worker.js"
+  },
   "action": {
-    "default_popup": "chat.html",
-    "default_icon": "logo.png"
+    "default_title": "Bhaws Chat Extension"
+  },
+  "permissions": ["sidePanel", "tabs"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+B",
+        "mac": "Command+B"
+      }
+    }
+  },
+  "icons": {
+    "16": "images/logo.png",
+    "48": "images/logo.png",
+    "128": "images/logo.png"
   }
-  }
+}
