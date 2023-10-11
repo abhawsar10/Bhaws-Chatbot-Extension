@@ -1,6 +1,83 @@
+<!DOCTYPE html>
 <html>
-    <head><meta charset="utf-8"></head>
-    <body>
-        <h1>Welcome to the future Bhaws Chatbot</h1>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <title>Bhaws Chatbot</title>
+    <style>
+        /* Add some basic styling for the chat interface */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .bot-message {
+            background-color: #eee;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Welcome to Bhaws Chatbot</h1>
+        <div class="user-message">
+            You: Hello, Chatbot!
+        </div>
+        <div class="bot-message">
+            Bhaws Chatbot: Hi there! How can I assist you today?
+        </div>
+        <!-- You can add more chat messages here as the conversation progresses -->
+        <!-- Example:
+        <div class="user-message">
+            You: What's the weather like today?
+        </div>
+        <div class="bot-message">
+            Bhaws Chatbot: I'm sorry, I don't have weather information.
+        </div>
+        -->
+        <!-- Add an input field for the user to type messages -->
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            const chatContainer = document.querySelector('.chat-container');
+
+            // Display user's message
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('user-message');
+            userMessage.textContent = `You: ${userInput}`;
+            chatContainer.appendChild(userMessage);
+
+            // Simulate a bot response (you can replace this with actual chatbot logic)
+            const botMessage = document.createElement('div');
+            botMessage.classList.add('bot-message');
+            botMessage.textContent = `Bhaws Chatbot: I'm just a simple example chatbot. You can replace this with real chatbot responses.`;
+            chatContainer.appendChild(botMessage);
+
+            // Clear the user's input field
+            document.getElementById('user-input').value = '';
+        }
+    </script>
+</body>
 </html>
