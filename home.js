@@ -10,15 +10,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
-
     sendButton.addEventListener('click', async function () {
         const userMessage = userInput.value.trim();
 
+        const context = JSON.parse(localStorage.getItem('scraped_data') || '""');
+        console.log(JSON.stringify(context))
         if (userMessage !== '') {
 
 
             displayUserMessage(userMessage);
-            const botResponse = await sendUserMessageToAPI(userMessage,allMessages);
+            const botResponse = await sendUserMessageToAPI(userMessage,allMessages,context);
             displayBotMessage(botResponse);
 
             // Store all messages array in localStorage
@@ -99,7 +100,14 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
         let filtered_data = await scrape_data(url_to_crawl)
         console.log("Scraped Data=======", filtered_data);
     }
+
+    if(message.scrape_data){
+        // console.log("Data gotten from site========",message.scrape_data)
+        localStorage.setItem('scraped_data', JSON.stringify(message.scrape_data));
+    }
+
 });
+
 
 async function scrape_data(url_to_crawl){
     
