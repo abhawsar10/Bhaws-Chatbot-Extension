@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let allMessages = [];
 
+    if (localStorage.getItem('scraped_data')) {
+        localStorage.removeItem('scraped_data')
+    }
+    
     if (localStorage.getItem('allMessages')) {
         allMessages = JSON.parse(localStorage.getItem('allMessages'));
     }
@@ -13,13 +17,13 @@ document.addEventListener('DOMContentLoaded', function () {
     sendButton.addEventListener('click', async function () {
         const userMessage = userInput.value.trim();
 
-        const context = JSON.parse(localStorage.getItem('scraped_data') || '""');
-        console.log(JSON.stringify(context))
         if (userMessage !== '') {
 
+            const context = await JSON.parse(localStorage.getItem('scraped_data') || '""');
+            console.log(context);
 
             displayUserMessage(userMessage);
-            const botResponse = await sendUserMessageToAPI(userMessage,allMessages,context);
+            const botResponse = await sendUserMessageToAPI(userMessage,allMessages,JSON.stringify(context));
             displayBotMessage(botResponse);
 
             // Store all messages array in localStorage
@@ -56,14 +60,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return messageElement;
     }
 
-    async function sendUserMessageToAPI(userMessage,prev_messages) {
+    async function sendUserMessageToAPI(userMessage,prev_messages,context) {
 
-        let prompt = ""
+        let prompt = "Given this information, I will ask you some questions about it:\n" + context
 
         for (const message of prev_messages){
             prompt += message + "\n";
         }
-        prompt += userMessage;
+        prompt += "\n" + userMessage;
 
         console.log(prompt)
 

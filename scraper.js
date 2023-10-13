@@ -10,12 +10,15 @@ function scrape_data() {
     //Price
     const priceElement = document.querySelector('[data-selector="final-price"]');
     const price = priceElement?.innerText || ""; 
-    scrape_data["sale price"] = price
+    scrape_data["price"] = price
     
     //Old price
     const strpriceElement = document.querySelector('[data-selector="strikethrough-price"]');
     const strprice = strpriceElement?.innerText || price;
     scrape_data["old price"] = strprice
+    
+    scrape_data["savings"] = "$"+(parseFloat(strprice.replace(/\D/g,'')) - parseFloat(price.replace(/\D/g,''))).toFixed(2);
+    scrape_data["discount"] = "$"+(parseFloat(strprice.replace(/\D/g,'')) - parseFloat(price.replace(/\D/g,''))).toFixed(2);
 
     //Description
     const  descElement = document.querySelector('[class*="__shortDescription"]');
@@ -54,12 +57,11 @@ function scrape_data() {
     let extrafeatures = [];
     var items = document.querySelector('#delivery').querySelectorAll('.deliveryAndSetup__item');
     items.forEach(function(item) {
-        var title = item.querySelector('h3').textContent; // get the text content of the h3 element
-        var link = item.querySelector('a').getAttribute('href'); // get the value of the href attribute from the a element
-        extrafeatures.push({"Feature":title, "Learn More":"saatva.com"+link})
+        var title = (item.querySelector('h3')?.textContent) || ""; // get the text content of the h3 element
+        var link = (item.querySelector('a')?.getAttribute('href')) || ""; // get the value of the href attribute from the a element
+        extrafeatures.push({"Feature":title, "Learn More Link":"https://www.saatva.com"+link})
     });
     scrape_data["Extra Features"] = extrafeatures
-
 
     //reviews
     var reviews = [];
@@ -106,11 +108,12 @@ function scrape_data() {
     return scrape_data
 } 
 
-
-
 function senddata(data){
     chrome.runtime.sendMessage({ scrape_data: data});
 }
+
+
+
 
 
 
