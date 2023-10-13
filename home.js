@@ -13,9 +13,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     
+    document.getElementById('user-input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            process_user_message();
+        }
+    });
     
 
     sendButton.addEventListener('click', async function () {
+        process_user_message();
+    });
+
+
+    async function process_user_message(){
+
         const userMessage = userInput.value.trim();
 
         if (userMessage !== '') {
@@ -50,32 +62,34 @@ document.addEventListener('DOMContentLoaded', function () {
             userInput.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-    });
 
+    }
 
-    reloadButton.addEventListener('click', function () {
-        localStorage.removeItem('allMessages');
-        chatMessages.innerHTML = '';
-        allMessages = [];
-    });
+    // reloadButton.addEventListener('click', function () {
+    //     localStorage.removeItem('allMessages');
+    //     chatMessages.innerHTML = '';
+    //     allMessages = [];
+    // });
 
-    addToCartButton.addEventListener('click', function () {
-        // add_to_cart()
-        // scroll_down()
-        // scroll_up()
-        scroll_to("specs")
-        // scroll_to("benefits")
-    });
+    // addToCartButton.addEventListener('click', function () {
+    //     // add_to_cart()
+    //     // scroll_down()
+    //     // scroll_up()
+    //     scroll_to("specs")
+    //     // scroll_to("benefits")
+    // });
 
 
     function displayUserMessage(message) {
         const userMessage = createMessageElement('user-message', `You: ${message}`);
         chatMessages.appendChild(userMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function displayBotMessage(message) {
         const botMessage = createMessageElement('bot-message', `Bhaws Chatbot: ${message}`);
         chatMessages.appendChild(botMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function createMessageElement(className, text) {
