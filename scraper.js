@@ -55,7 +55,8 @@ function scrape_data() {
 
     //extrafeatures
     let extrafeatures = [];
-    var items = document.querySelector('#delivery').querySelectorAll('.deliveryAndSetup__item');
+    var deliveryElement = document.querySelector('#delivery');
+    var items = deliveryElement ? deliveryElement.querySelectorAll('.deliveryAndSetup__item') : [];
     items.forEach(function(item) {
         var title = (item.querySelector('h3')?.textContent) || ""; // get the text content of the h3 element
         var link = (item.querySelector('a')?.getAttribute('href')) || ""; // get the value of the href attribute from the a element
@@ -109,14 +110,46 @@ function scrape_data() {
 } 
 
 function senddata(data){
-    chrome.runtime.sendMessage({ scrape_data: data});
+
+    chrome.runtime.sendMessage({ scraped_data: data});
+}
+
+
+data = scrape_data();
+senddata(data);
+
+function findButtonByText(text) {
+    
+    let buttons = document.querySelectorAll('button');
+    for (let button of buttons) {
+        if (button.textContent.includes(text)) {
+            return button;
+        }
+    }
+    return null;
 }
 
 
 
+function add_to_cart(){
 
+    let text = 'Add 1 Item to Cart'
+    let addToCartButton = findButtonByText(text);
 
+    if (addToCartButton) {
+        console.log("I clicked the button", addToCartButton.innerHTML);
+        addToCartButton.click();
+    }else{
+        console.error('Add-to-cart button not found');
+    }
 
+}
 
-data = scrape_data()
-senddata(data)
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.action == "add_to_cart") {
+        add_to_cart();
+        sendResponse({result: "success"});
+      }
+    }
+);

@@ -5,13 +5,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let allMessages = [];
 
+    if (localStorage.getItem('allMessages')) {
+        localStorage.removeItem('allMessages')
+    }
     if (localStorage.getItem('scraped_data')) {
         localStorage.removeItem('scraped_data')
     }
     
-    if (localStorage.getItem('allMessages')) {
-        allMessages = JSON.parse(localStorage.getItem('allMessages'));
-    }
+    
     
 
     sendButton.addEventListener('click', async function () {
@@ -24,6 +25,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             displayUserMessage(userMessage);
             const botResponse = await sendUserMessageToAPI(userMessage,allMessages,JSON.stringify(context));
+            if (isAddToCartIntent(botResponse)) {
+                // Call the add_to_cart function
+                add_to_cart();
+                // return 'The item has been added to your cart.';
+            }
             displayBotMessage(botResponse);
 
             // Store all messages array in localStorage
@@ -42,6 +48,11 @@ document.addEventListener('DOMContentLoaded', function () {
         chatMessages.innerHTML = '';
         allMessages = [];
     });
+
+    addToCartButton.addEventListener('click', function () {
+        add_to_cart()
+    });
+
 
     function displayUserMessage(message) {
         const userMessage = createMessageElement('user-message', `You: ${message}`);
@@ -62,12 +73,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function sendUserMessageToAPI(userMessage,prev_messages,context) {
 
-        let prompt = "Given this information, I will ask you some questions about it:\n" + context
+        let prompt = "";
+        prompt += "Given this information, user will ask you some questions about it:\n" + context +"\n"
+        
+        prompt += "If the user tells you to 'add this item to cart' or 'purchase this item' or anything similar, simply reply 'Added item to cart' \n"
+
 
         for (const message of prev_messages){
             prompt += message + "\n";
         }
-        prompt += "\n" + userMessage;
+        prompt += "\n" + "user:" +userMessage;
 
         console.log(prompt)
 
@@ -105,12 +120,33 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
         console.log("Scraped Data=======", filtered_data);
     }
 
-    if(message.scrape_data){
-        // console.log("Data gotten from site========",message.scrape_data)
-        localStorage.setItem('scraped_data', JSON.stringify(message.scrape_data));
+    if(message.scraped_data){
+        console.log("Data gotten from site========",message.scraped_data)
+        localStorage.setItem('scraped_data', JSON.stringify(message.scraped_data));
     }
 
 });
+
+function isAddToCartIntent(response) {
+    
+    const addToCartPhrases = ['add to cart','Added item to cart','add','cart', 'purchase', 'buy', 'order'];
+    return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
+}
+
+function add_to_cart(){
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+        chrome.tabs.sendMessage(
+            tabs[0].id,
+            {action: "add_to_cart"},
+            function(response) {
+                console.log(response.result);
+            }
+        );
+
+    });
+}
 
 
 async function scrape_data(url_to_crawl){
