@@ -25,11 +25,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             displayUserMessage(userMessage);
             const botResponse = await sendUserMessageToAPI(userMessage,allMessages,JSON.stringify(context));
+
             if (isAddToCartIntent(botResponse)) {
-                // Call the add_to_cart function
                 add_to_cart();
-                // return 'The item has been added to your cart.';
             }
+            if (isScrollDownIntent(botResponse)) {
+                scroll_down();
+            }
+            if (isScrollUpIntent(botResponse)) {
+                scroll_up();
+            }
+            let scrolltonav = null
+            if ( scrolltonav = isScrollToIntent(botResponse)) {
+                scroll_to(scrolltonav);
+            }
+
             displayBotMessage(botResponse);
 
             // Store all messages array in localStorage
@@ -50,7 +60,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     addToCartButton.addEventListener('click', function () {
-        add_to_cart()
+        // add_to_cart()
+        // scroll_down()
+        // scroll_up()
+        scroll_to("specs")
+        // scroll_to("benefits")
     });
 
 
@@ -74,9 +88,17 @@ document.addEventListener('DOMContentLoaded', function () {
     async function sendUserMessageToAPI(userMessage,prev_messages,context) {
 
         let prompt = "";
-        prompt += "Given this information, user will ask you some questions about it:\n" + context +"\n"
+
+        prompt += "You are a chatbot for a e-commerce site \n"
+
+        prompt += "Given the following information, user will ask you some questions about it:\n" + context +"\n"
         
         prompt += "If the user tells you to 'add this item to cart' or 'purchase this item' or anything similar, simply reply 'Added item to cart' \n"
+
+        prompt += "If the user tells you to 'scroll down' or anything similar, simply reply 'Scrolling down...' \n"
+        prompt += "If the user tells you to 'scroll up' or anything similar, simply reply 'Scrolling up...' \n"
+        prompt += "The webpage has scrollable sections labelled 'Overview', 'Benefits', 'Reviews', 'Specs', 'FAQs' , 'Service'.\n" 
+        prompt += "If the user tells you to 'scroll to these sections' or anything similar, simply reply 'Scrolling to <section name>...' \n"
 
 
         for (const message of prev_messages){
@@ -140,6 +162,86 @@ function add_to_cart(){
         chrome.tabs.sendMessage(
             tabs[0].id,
             {action: "add_to_cart"},
+            function(response) {
+                console.log(response.result);
+            }
+        );
+
+    });
+}
+
+function isScrollDownIntent(response) {
+    
+    const addToCartPhrases = ['scrolling down'];
+    return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
+}
+
+function scroll_down(){
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+        chrome.tabs.sendMessage(
+            tabs[0].id,
+            {action: "scroll_down"},
+            function(response) {
+                console.log(response.result);
+            }
+        );
+
+    });
+}
+
+function isScrollUpIntent(response) {
+    
+    const addToCartPhrases = ['scrolling up'];
+    return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
+}
+
+function scroll_up(){
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+        chrome.tabs.sendMessage(
+            tabs[0].id,
+            {action: "scroll_up"},
+            function(response) {
+                console.log(response.result);
+            }
+        );
+
+    });
+}
+
+function isScrollToIntent(response) {
+    
+    // const addToCartPhrases = ['Scrolling to'];
+    // return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
+
+    // Define a regular expression that matches "Scrolling to" followed by a space and a word
+    const regex = /Scrolling to (\w+)/i;
+
+    // Search for the pattern in the response
+    const match = response.match(regex);
+
+    // If the pattern was found (i.e., match is not null), return the word after "Scrolling to"
+    // which is captured by the parentheses in the regex (\w+ matches one or more word characters)
+    // The match operation returns an array where the first element is the full string matched,
+    // and the subsequent elements are the captured groups, so the word you want is at index 1.
+    if (match) {
+        return match[1];
+    } else {
+        return null;
+    }
+
+}
+
+function scroll_to(scroll_to_nav){
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+        chrome.tabs.sendMessage(
+            tabs[0].id,
+            {action: "scroll_to",scroll_to_nav:scroll_to_nav},
             function(response) {
                 console.log(response.result);
             }
