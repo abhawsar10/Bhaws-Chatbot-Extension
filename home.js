@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("Data gotten from storage===>",context);
 
             displayUserMessage(userMessage);
+            
+            userInput.value = '';
             const botResponse = await sendUserMessageToAPI(userMessage,allMessages,JSON.stringify(context));
 
             if (isAddToCartIntent(botResponse)) {
@@ -68,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function () {
             allMessages.push(botResponse);
             localStorage.setItem('allMessages', JSON.stringify(allMessages));
 
-            userInput.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
@@ -90,21 +91,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function displayUserMessage(message) {
-        const userMessage = createMessageElement('user-message', `You: ${message}`);
+        const userMessage = createMessageElement('user-message', message,"user");
         chatMessages.appendChild(userMessage);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function displayBotMessage(message) {
-        const botMessage = createMessageElement('bot-message', `Bhaws Chatbot: ${message}`);
+        const botMessage = createMessageElement('bot-message', message,"bot");
         chatMessages.appendChild(botMessage);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function createMessageElement(className, text) {
+    function createMessageElement(className, text,type) {
+
         const messageElement = document.createElement('div');
         messageElement.classList.add(className);
-        messageElement.textContent = text;
+
+        const circleDiv = document.createElement('span');
+        const textDiv = document.createElement('div');
+        textDiv.classList.add('message')
+        textDiv.textContent = text;
+
+        if (type=="user"){
+            circleDiv.classList.add('user-circle')
+            circleDiv.textContent = "YOU";
+            messageElement.appendChild(circleDiv);
+            messageElement.appendChild(textDiv);
+        }
+        if (type=="bot"){
+            circleDiv.classList.add('bot-circle')
+            circleDiv.textContent = "BH";
+            messageElement.appendChild(textDiv);
+            messageElement.appendChild(circleDiv);
+        }
+        // Create a new div for the text content.
+
+
         return messageElement;
     }
 
@@ -112,9 +134,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let prompt = "";
 
-        prompt += "You are a chatbot for a e-commerce site \n"
+        prompt += "You are a chatbot for the e-commerce site, Saatva.com, which sells mattresses, frames, pillows, etc \n";
 
-        prompt += "Given the following information, user will ask you some questions about it:\n" + context +"\n"
+        prompt += "Given the following information, user will ask you some questions about it";
+        
+        prompt += "Limit answers to 600 characters:\n" + context + "\n";
         
         prompt += "If the user tells you to 'add this item to cart' or 'purchase this item' or anything similar, simply reply 'Added item to cart' \n"
 
@@ -174,7 +198,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
 
 function isAddToCartIntent(response) {
     
-    const addToCartPhrases = ['add to cart','Added item to cart','add','cart', 'purchase', 'buy', 'order'];
+    const addToCartPhrases = ['add to cart','Added item to cart','add','cart', 'buy'];
     return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
 }
 

@@ -1,10 +1,11 @@
 body {
     font-family: 'Poppins', sans-serif;
-    font-size:20px;
+    font-size:15px;
     margin: 0;
     padding: 0;
     display: flex; /* Make body flex container */
     min-height: 100vh; /* Full height */
+    background-color: #f4f4f4;
     box-sizing: border-box; /* Prevent padding issues */
 }
 
@@ -31,7 +32,7 @@ body {
     left: 0; /* Align left to the parent container */
     width: 100%; /* Full width */
     background-color: #f4f4f4; /* Same as chat-container for seamless look */
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); /* Optional: for better UI/UX */
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1); /* Optional: for better UI/UX */
     box-sizing: border-box;
 
     display: flex;
@@ -40,19 +41,28 @@ body {
     padding: 10px;
 }
 
-.user-input {
-    width: 70%; /* Adjust the input field width as needed */
+#user-input {
+    width: 80%;
+    height: 40px;
     padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding-left:20px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size:15px;
+
 }
 
-.send-button {
-    width: 25%; /* Adjust the button width as needed */
+#sendButton {
+    width: 10%; /* Adjust the button width as needed */
+    height: 40px;
+    padding: 5px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 10px;
     background-color: #007bff;
     color: #fff;
-    border: none;
-    border-radius: 5px;
     padding: 5px;
     cursor: pointer;
 }
@@ -63,11 +73,60 @@ body {
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-circle{
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+
+    margin-right:10px;
+
+    color: #007bff;
+    line-height: 20px;
+    font-weight: bold;
+    font-size: 13px;
+
+    height: 40px; 
+    width: 40px;
+    background-color: #fff; 
+    border-radius: 50%; 
 }
 
 .bot-message {
-    background-color: #eee;
+    background-color: #facc15;
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
+        
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bot-circle{
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+
+    margin-left:10px;
+    
+    color: #facc15;
+    line-height: 20px;
+    font-weight: bold;
+    font-size: 15px;
+
+    height: 40px; 
+    width: 40px;
+    background-color: #000; 
+    border-radius: 50%; 
+}
+.message{
+    width: 90%;
 }
