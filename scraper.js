@@ -76,13 +76,22 @@ function scrape_data() {
     //FAQs
     var faqs = [];
     var faqsElements = document.querySelectorAll('.specsFaqsAccordion__item');
-    faqsElements.forEach(function(element) {
+    // faqsElements.forEach(function(element) {
 
-        var question = element.querySelector('.specsFaqsAccordion__title').innerHTML
-        var answer = element.querySelector('.specsFaqsAccordion__description').innerHTML
-        faqs.push({"Question":question,"Answer":answer});
+    //     var question = element.querySelector('.specsFaqsAccordion__title').innerHTML
+    //     var answer = element.querySelector('.specsFaqsAccordion__description').innerHTML
+    //     faqs.push({"Question":question,"Answer":answer});
 
-    });
+    // });
+
+    let limit = 20;
+    for (let i = 0; i < faqsElements.length && i < limit; i++) {
+        let element = faqsElements[i];
+        var question = element.querySelector('.specsFaqsAccordion__title').innerHTML;
+        var answer = element.querySelector('.specsFaqsAccordion__description').innerHTML;
+        faqs.push({"Question": question, "Answer": answer});
+    }
+
     scrape_data["Frequently Asked Questions"] = faqs
 
 
@@ -112,6 +121,8 @@ function scrape_data() {
 function senddata(data){
 
     chrome.runtime.sendMessage({ scraped_data: data});
+    // localStorage.removeItem('scraped_data')
+    // localStorage.setItem('scraped_data', JSON.stringify(data));
 }
 
 

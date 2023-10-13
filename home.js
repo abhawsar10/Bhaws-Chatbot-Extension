@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+
+    // Refresh the current active tab
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        var currentTab = tabs[0];
+        chrome.tabs.reload(currentTab.id);
+    });
+
+
     const sendButton = document.getElementById('sendButton');
     const userInput = document.getElementById('user-input');
     const chatMessages = document.getElementById('chat-messages');
@@ -8,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (localStorage.getItem('allMessages')) {
         localStorage.removeItem('allMessages')
     }
-    if (localStorage.getItem('scraped_data')) {
-        localStorage.removeItem('scraped_data')
-    }
+    // if (localStorage.getItem('scraped_data')) {
+    //     localStorage.removeItem('scraped_data')
+    // }
     
     
     document.getElementById('user-input').addEventListener('keydown', function(event) {
@@ -32,8 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (userMessage !== '') {
 
-            const context = await JSON.parse(localStorage.getItem('scraped_data') || '""');
-            console.log(context);
+            const context = await JSON.parse(localStorage.getItem('scraped_data'));
+            console.log("Data gotten from storage===>",context);
 
             displayUserMessage(userMessage);
             const botResponse = await sendUserMessageToAPI(userMessage,allMessages,JSON.stringify(context));
@@ -157,7 +166,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
     }
 
     if(message.scraped_data){
-        console.log("Data gotten from site========",message.scraped_data)
+        console.log("Data gotten from content and stored===>",message.scraped_data)
         localStorage.setItem('scraped_data', JSON.stringify(message.scraped_data));
     }
 
@@ -228,20 +237,15 @@ function scroll_up(){
 
 function isScrollToIntent(response) {
     
-    // const addToCartPhrases = ['Scrolling to'];
-    // return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
-
-    // Define a regular expression that matches "Scrolling to" followed by a space and a word
     const regex = /Scrolling to (\w+)/i;
 
     // Search for the pattern in the response
     const match = response.match(regex);
 
-    // If the pattern was found (i.e., match is not null), return the word after "Scrolling to"
-    // which is captured by the parentheses in the regex (\w+ matches one or more word characters)
-    // The match operation returns an array where the first element is the full string matched,
-    // and the subsequent elements are the captured groups, so the word you want is at index 1.
     if (match) {
+        if(match[1].toLowerCase()=="faqs"){
+            return "specs"
+        }
         return match[1];
     } else {
         return null;
