@@ -45,32 +45,51 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("Data gotten from storage===>",context);
 
             displayUserMessage(userMessage);
-            
             userInput.value = '';
-            const botResponse = await sendUserMessageToAPI(userMessage,allMessages,JSON.stringify(context));
+ 
+            try {
+                document.getElementById('loading-icon').style.display = 'block';
+                document.getElementById('normal-icon').style.display = 'none';
+                // document.getElementById('normal-icon').style.cssText = 'display:none;';
+                // document.getElementById('loading-icon').style.cssText = '';
+                const botResponse = await sendUserMessageToAPI(userMessage, allMessages, JSON.stringify(context));  
+                
+                
+                if (isAddToCartIntent(botResponse)) {
+                    add_to_cart();
+                }
+                if (isScrollDownIntent(botResponse)) {
+                    scroll_down();
+                }
+                if (isScrollUpIntent(botResponse)) {
+                    scroll_up();
+                }
+                let scrolltonav = null
+                if ( scrolltonav = isScrollToIntent(botResponse)) {
+                    scroll_to(scrolltonav);
+                }
 
-            if (isAddToCartIntent(botResponse)) {
-                add_to_cart();
-            }
-            if (isScrollDownIntent(botResponse)) {
-                scroll_down();
-            }
-            if (isScrollUpIntent(botResponse)) {
-                scroll_up();
-            }
-            let scrolltonav = null
-            if ( scrolltonav = isScrollToIntent(botResponse)) {
-                scroll_to(scrolltonav);
+                displayBotMessage(botResponse);
+
+                // Store all messages array in localStorage
+                allMessages.push(userMessage);
+                allMessages.push(botResponse);
+                localStorage.setItem('allMessages', JSON.stringify(allMessages));
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+
+
+
+            } catch (error) {
+                console.error('An error occurred at loading time:', error);
+            } finally {
+                document.getElementById('loading-icon').style.display = 'none';
+                document.getElementById('normal-icon').style.display = 'block';
+                // document.getElementById('loading-icon').style.cssText = 'display:none;';
+                // document.getElementById('normal-icon').style.cssText = '';
             }
 
-            displayBotMessage(botResponse);
-
-            // Store all messages array in localStorage
-            allMessages.push(userMessage);
-            allMessages.push(botResponse);
-            localStorage.setItem('allMessages', JSON.stringify(allMessages));
-
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
     }
@@ -120,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (type=="bot"){
             circleDiv.classList.add('bot-circle')
-            circleDiv.textContent = "BH";
+            circleDiv.textContent = "BOT";
             messageElement.appendChild(textDiv);
             messageElement.appendChild(circleDiv);
         }
@@ -156,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(prompt)
 
         try {
-            const response = await fetch('http://localhost:3000/generateChatResponse', {
+            const response = await fetch('https://bhaws-chatbot-extension.uw.r.appspot.com/generateChatResponse', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -198,8 +217,25 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
 
 function isAddToCartIntent(response) {
     
-    const addToCartPhrases = ['add to cart','Added item to cart','add','cart', 'buy'];
-    return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
+    const addToCartPhrases = ['add to cart','Added item to cart',];
+    // return addToCartPhrases.some(phrase => response.toLowerCase().includes(phrase));
+
+    let matchedPhrase = null;
+
+    addToCartPhrases.forEach(phrase => {
+        if (response.toLowerCase().includes(phrase.toLowerCase())) {
+            matchedPhrase = phrase; // If a match is found, store the phrase
+        }
+    });
+
+    if (matchedPhrase) {
+        console.log('Matched phrase:', matchedPhrase); // Log the matched phrase
+        return true;
+    }
+
+return false;
+
+
 }
 
 function add_to_cart(){

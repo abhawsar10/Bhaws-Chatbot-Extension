@@ -12,13 +12,18 @@
 <body>
     <div class="chat-container">
         <div class="chat-messages" id="chat-messages">
-            <div class="bot-message"><div class="message">I'm the BHAWS Chatbot. How can I help you?</div><span class="bot-circle">BH</span></div>
+            <div class="bot-message"><div class="message">I'm the BHAWS Chatbot. How can I help you?</div><span class="bot-circle">BOT</span></div>
             <!-- <div class="user-message"><span class="user-circle">YOU</span><div class="message">Who are you?</div></div> -->
-
         </div>
+        <!-- <div class="loading-svg" id="loading-icon">
+            
+        </div> -->
         <div class="user-input-container">
             <input type="text" id="user-input" placeholder="Type your message...">
-            <div id="sendButton"><i class="fa-solid fa-paper-plane"></i></div>
+            <div id="sendButton">
+                <div id="normal-icon"><i class="fa-solid fa-paper-plane"></i></div>
+                <div id="loading-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+            </div>
             <!-- <button id="reloadButton">Reload</button> -->
             <!-- <button id="addToCartButton">Add to cart</button> -->
         </div>
