@@ -3,8 +3,8 @@ function scrape_data() {
     let scrape_data = {}
 
     //Title
-    const titleElement = document.querySelector('h1'); // Selects the first h1 element found on the page
-    const title = titleElement?.innerText || ""; // Extracts the text content of the product title
+    const titleElement = document.querySelector('h1');
+    const title = titleElement?.innerText || ""; 
     scrape_data["title"] = title
 
     //Price
@@ -58,8 +58,8 @@ function scrape_data() {
     var deliveryElement = document.querySelector('#delivery');
     var items = deliveryElement ? deliveryElement.querySelectorAll('.deliveryAndSetup__item') : [];
     items.forEach(function(item) {
-        var title = (item.querySelector('h3')?.textContent) || ""; // get the text content of the h3 element
-        var link = (item.querySelector('a')?.getAttribute('href')) || ""; // get the value of the href attribute from the a element
+        var title = (item.querySelector('h3')?.textContent) || "";
+        var link = (item.querySelector('a')?.getAttribute('href')) || "";
         extrafeatures.push({"Feature":title, "Learn More Link":"https://www.saatva.com"+link})
     });
     scrape_data["Extra Features"] = extrafeatures
@@ -76,13 +76,6 @@ function scrape_data() {
     //FAQs
     var faqs = [];
     var faqsElements = document.querySelectorAll('.specsFaqsAccordion__item');
-    // faqsElements.forEach(function(element) {
-
-    //     var question = element.querySelector('.specsFaqsAccordion__title').innerHTML
-    //     var answer = element.querySelector('.specsFaqsAccordion__description').innerHTML
-    //     faqs.push({"Question":question,"Answer":answer});
-
-    // });
 
     let limit = 20;
     for (let i = 0; i < faqsElements.length && i < limit; i++) {
@@ -97,7 +90,6 @@ function scrape_data() {
 
     //Additional Info
     var info = []
-    // dataStreamLongDescription
     var infoElement = document.querySelector('.dataStreamLongDescription');
 
     if (infoElement){
@@ -121,8 +113,6 @@ function scrape_data() {
 function senddata(data){
 
     chrome.runtime.sendMessage({ scraped_data: data});
-    // localStorage.removeItem('scraped_data')
-    // localStorage.setItem('scraped_data', JSON.stringify(data));
 }
 
 

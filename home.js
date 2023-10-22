@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
 
-    // Refresh the current active tab
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var currentTab = tabs[0];
         chrome.tabs.reload(currentTab.id);
@@ -17,9 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (localStorage.getItem('allMessages')) {
         localStorage.removeItem('allMessages')
     }
-    // if (localStorage.getItem('scraped_data')) {
-    //     localStorage.removeItem('scraped_data')
-    // }
     
     
     document.getElementById('user-input').addEventListener('keydown', function(event) {
@@ -50,8 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 document.getElementById('loading-icon').style.display = 'block';
                 document.getElementById('normal-icon').style.display = 'none';
-                // document.getElementById('normal-icon').style.cssText = 'display:none;';
-                // document.getElementById('loading-icon').style.cssText = '';
+                
                 const botResponse = await sendUserMessageToAPI(userMessage, allMessages, JSON.stringify(context));  
                 
                 
@@ -86,8 +81,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } finally {
                 document.getElementById('loading-icon').style.display = 'none';
                 document.getElementById('normal-icon').style.display = 'block';
-                // document.getElementById('loading-icon').style.cssText = 'display:none;';
-                // document.getElementById('normal-icon').style.cssText = '';
             }
 
         }
@@ -143,8 +136,6 @@ document.addEventListener('DOMContentLoaded', function () {
             messageElement.appendChild(textDiv);
             messageElement.appendChild(circleDiv);
         }
-        // Create a new div for the text content.
-
 
         return messageElement;
     }
@@ -199,6 +190,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+
+//---------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------Listeners-------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
+
 chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
 
     if (message.url_to_crawl) {
@@ -214,6 +211,13 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
     }
 
 });
+
+
+
+//---------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------Intents---------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
 
 function isAddToCartIntent(response) {
     
@@ -253,6 +257,10 @@ function add_to_cart(){
     });
 }
 
+
+
+//---------------------------------------------------------------------------------------------------------------
+
 function isScrollDownIntent(response) {
     
     const addToCartPhrases = ['scrolling down'];
@@ -274,6 +282,8 @@ function scroll_down(){
     });
 }
 
+//---------------------------------------------------------------------------------------------------------------
+
 function isScrollUpIntent(response) {
     
     const addToCartPhrases = ['scrolling up'];
@@ -294,6 +304,10 @@ function scroll_up(){
 
     });
 }
+
+
+//---------------------------------------------------------------------------------------------------------------
+
 
 function isScrollToIntent(response) {
     
@@ -328,28 +342,30 @@ function scroll_to(scroll_to_nav){
     });
 }
 
+//---------------------------------------------------------------------------------------------------------------
 
-async function scrape_data(url_to_crawl){
+
+// async function scrape_data(url_to_crawl){
     
-    try {
-        const response = await fetch('http://localhost:3000/scrape_data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ url_to_crawl: url_to_crawl })
-        });
+//     try {
+//         const response = await fetch('http://localhost:3000/scrape_data', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ url_to_crawl: url_to_crawl })
+//         });
 
-        if (response.ok) {
-            const data = await response.json();
-            return data.filtered_data;
-        } else {
-            console.error('Error sending message to API');
-            return 'Error occurred while processing your request.';
-        }
-    } catch (error) {
-        console.error('Error sending message to API', error);
-        return 'Error occurred while processing your request.';
-    }
+//         if (response.ok) {
+//             const data = await response.json();
+//             return data.filtered_data;
+//         } else {
+//             console.error('Error sending message to API');
+//             return 'Error occurred while processing your request.';
+//         }
+//     } catch (error) {
+//         console.error('Error sending message to API', error);
+//         return 'Error occurred while processing your request.';
+//     }
 
-}
+// }
