@@ -90,7 +90,7 @@ body {
     margin-right:10px;
 
     color: #007bff;
-    line-height: 20px;
+    line-height: 20px;s
     font-weight: bold;
     font-size: 13px;
 
@@ -101,7 +101,8 @@ body {
 }
 
 .bot-message {
-    background-color: #facc15;
+    background-color: #0b3461;
+    color: #fff;
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
@@ -119,14 +120,14 @@ body {
 
     margin-left:10px;
     
-    color: #facc15;
+    color: #0b3461;
     line-height: 20px;
     font-weight: bold;
     font-size: 15px;
 
     height: 40px; 
     width: 40px;
-    background-color: #000; 
+    background-color: #fff; 
     border-radius: 50%; 
 }
 .message{

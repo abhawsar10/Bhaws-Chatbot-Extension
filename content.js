@@ -22,7 +22,7 @@ function findNavButtonByText(text) {
 
 function add_to_cart(){
 
-    let text = 'Add 1 Item to Cart'
+    let text = 'Add Item to Cart'
     let addToCartButton = findButtonByText(text);
 
     if (addToCartButton) {

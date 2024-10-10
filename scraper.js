@@ -65,23 +65,58 @@ function scrape_data() {
     scrape_data["Extra Features"] = extrafeatures
 
     //reviews
-    var reviews = [];
-    var reviewElements = document.querySelectorAll('.content-review');
-    reviewElements.forEach(function(element) {
-        reviews.push(element.innerText.trim());
+    // var reviews = [];
+    // var reviewElements = document.querySelectorAll('.yotpo-review-wrapper');
+    // reviewElements.forEach(function(element) {
+    //     reviews.push(element.innerText.trim());
+    //     console.log(element)
+    // });
+    // scrape_data["Reviews"] = reviews
+
+    
+    function waitForReviews() {
+        return new Promise((resolve, reject) => {
+            const observer = new MutationObserver((mutations, observerInstance) => {
+                const reviewElements = document.querySelectorAll('.yotpo-review-wrapper');
+                if (reviewElements.length > 0) {
+                    observerInstance.disconnect(); // Stop observing
+                    resolve(reviewElements);
+                }
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // Timeout in case reviews never load
+            setTimeout(() => {
+                observer.disconnect();
+                reject('Reviews did not load in time.');
+            }, 5000); // Adjust timeout as necessary
+        });
+    }
+
+    waitForReviews().then(reviewElements => {
+        let reviews = [];
+        reviewElements.forEach(function(element) {
+            reviews.push(element.innerText.trim());
+        });
+        scrape_data["Reviews"] = reviews;
+        senddata(scrape_data);
+    }).catch(error => {
+        console.log(error);
     });
-    scrape_data["Reviews"] = reviews
+
 
 
     //FAQs
     var faqs = [];
-    var faqsElements = document.querySelectorAll('.specsFaqsAccordion__item');
+    // var faqsElements = document.querySelectorAll('.specsFaqsAccordion__item');
+    var faqsElements = document.querySelectorAll('.accordion_item__X9ooQ');
 
     let limit = 20;
     for (let i = 0; i < faqsElements.length && i < limit; i++) {
         let element = faqsElements[i];
-        var question = element.querySelector('.specsFaqsAccordion__title').innerHTML;
-        var answer = element.querySelector('.specsFaqsAccordion__description').innerHTML;
+        var question = element.querySelector('.faqSection_question__M6xGe')?.innerHTML || '';
+        var answer = element.querySelector('.accordion_contentContainer__fhU_K')?.innerHTML || '';
         faqs.push({"Question": question, "Answer": answer});
     }
 
@@ -111,7 +146,6 @@ function scrape_data() {
 } 
 
 function senddata(data){
-
     chrome.runtime.sendMessage({ scraped_data: data});
 }
 
